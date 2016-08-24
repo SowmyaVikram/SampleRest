@@ -1,1 +1,15 @@
 # SampleRest
+
+This is a simple REST API server. By default, server listens on PORT 3001. If you want to override then set/export REST_PORT to the desired port before you launch the server
+
+Setup and Test
+To setup - 
+Run `npm install`
+
+To test -
+Either use CURL commands or Rest client like POSTMAN
+
+POST http://localhost:3001 accepts and returns a JSON
+GET http://localhost:3001 returns `You have hit GET !`
+PUT http://localhost:3001 returns `This is PUT`
+DELETE http://localhost:3001 returns `This is Delete`
