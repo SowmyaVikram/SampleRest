@@ -27,5 +27,7 @@ app.delete('/', function(req,res){
 })
 
 app.all(/.*$/, function(req, res) {
-    res.send('You can send any request but it you can expect only this !');
+    res.send('You can send any request but you can expect only this !');
 });
+
+module.exports = {app:app};

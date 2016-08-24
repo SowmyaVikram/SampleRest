@@ -6,6 +6,7 @@
   - [Setup](#setup)
   - [Run](#run)
   - [Test](#test)
+  - [Unit Tests](#unit-tests)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,3 +28,6 @@ POST http://localhost:3001 accepts and returns a JSON</br>
 GET http://localhost:3001 returns `You have hit GET !`</br>
 PUT http://localhost:3001 returns `This is PUT`</br>
 DELETE http://localhost:3001 returns `This is Delete`
+
+## Unit Tests
+The test folder contains the UTs for server.js. Run the same using `npm test` command
