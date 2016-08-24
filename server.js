@@ -26,3 +26,6 @@ app.delete('/', function(req,res){
     res.send("This is Delete");
 })
 
+app.all(/.*$/, function(req, res) {
+    res.send('You can send any request but it you can expect only this !');
+});
