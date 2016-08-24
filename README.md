@@ -9,7 +9,7 @@ Run `npm install`
 To test -
 Either use CURL commands or Rest client like POSTMAN
 
-POST http://localhost:3001 accepts and returns a JSON
-GET http://localhost:3001 returns `You have hit GET !`
-PUT http://localhost:3001 returns `This is PUT`
+POST http://localhost:3001 accepts and returns a JSON</br>
+GET http://localhost:3001 returns `You have hit GET !`</br>
+PUT http://localhost:3001 returns `This is PUT`</br>
 DELETE http://localhost:3001 returns `This is Delete`
