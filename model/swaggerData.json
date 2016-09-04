@@ -1,0 +1,76 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "objects list and definitions",
+        "description": "objects list and definitions"
+    },
+    "host": "localhost",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "x-objects-list": {
+        "Customer": {
+            "objectId": "Customer",
+            "methods": [
+                "PUT",
+                "GET",
+                "POST",
+                "DELETE"
+            ],
+            "objectDescription": "This is customer object",
+            "$ref": "#/definitions/Customer"
+        },
+        "Employee": {
+            "objectId": "Employee",
+            "methods": [
+                "PUT",
+                "GET",
+                "POST",
+                "DELETE"
+            ],
+            "objectDescription": "This is Employee object",
+            "$ref": "#/definitions/Employee"
+        }
+    },
+    "paths": {},
+    "definitions": {
+        "Customer": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "Employee": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

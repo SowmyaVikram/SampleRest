@@ -7,9 +7,10 @@
     "body-parser": "^1.15.2",
     "express": "~4.0.0",
     "mocha": "^3.0.2",
-    "supertest": "^2.0.0"
+    "supertest": "^2.0.0",
+    "swagger-parser": "~3.4.0"
   },
   "scripts": {
-  "test": "mocha test/*.js"
-}
+    "test": "mocha test/*.js"
+  }
 }
