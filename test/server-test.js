@@ -14,27 +14,27 @@ describe('loading express', function () {
     });
     it('200 for everything else', function testPath(done) {
         request(server)
-            .get('/foo/bar')
-            .expect(200, 'You can send any request but you can expect only this !', done);
+            .get('/customer')
+            .expect(200, {}, done);
     });
     it('responds to PUT on /', function testSlash(done) {
         request(server)
             .put('/')
-            .expect(200, 'This is PUT', done);
+            .expect(200, {}, done);
     });
     it('responds to DELETE on /', function testSlash(done) {
         request(server)
             .delete('/')
-            .expect(200, 'This is Delete',  done);
+            .expect(404, {},  done);
     });
     it('responds to POST /', function testSlash(done) {
         var postData = {
-            "Reuqest": "POST",
-            "RESPONSE": "request Body"
+            "id": 1,
+            "name": "test"
         };
         request(server)
-            .post('/')
+            .post('/customer')
             .set('Accept', 'application/json').send(postData)
-            .expect(200, 'You have hit POST with {"Reuqest":"POST","RESPONSE":"request Body"}', done);
+            .expect(200, {}, done);
     });
 });
