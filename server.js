@@ -10,26 +10,44 @@ var getData = require('./lib/getData');
 var updateData = require('./lib/updateData');
 var deleteData = require('./lib/deleteData');
 
-app.get(/.*$/, function(req, res){
+app.get(/.*$/, function(req, res) {
     var objectPath = (req.path).split('/');
-    if(objectPath[1] === undefined)
-    {
+    var itsGetBYId = false;
+    var id;
+    if (objectPath[1] === undefined) {
         res.status(500).send("You have hit get but with no path");
+    } else if (objectPath.length > 3) {
+        res.status(500).send("You have hit get but with no path");
+    } else if (objectPath.length === 3) {
+        itsGetBYId = true;
+        id = Number(objectPath[2]);
+        if (id === undefined || id === ''){
+            res.status(500).send("You have hit get but with no ID to get the data");
+        }
     }
 
-    console.log("calling getall");
-    getData.getAll(objectPath[1], 'get', function(found){
+    if (itsGetBYId) {
+        getData.getById(objectPath[1], 'get', id, function (found) {
 
-        if(found){
-           // res.status(200).setHeader('Content-Type', 'application/json').send(JSON.stringify(found));
-            console.log("Got this ");
+            if (found) {
+                res.json(found);
+            }
+            else {
+                res.status(200).send("There is no data to get");
+            }
+        });
+
+    } else {
+        getData.getAll(objectPath[1], 'get', function (found) {
+
+        if (found) {
             res.json(found);
         }
         else {
-            console.log("Got false");
             res.status(200).send("There is no data to get");
         }
     });
+   }
 })
 
 app.listen(port, function () {
@@ -85,19 +103,42 @@ app.put(/.*$/, function(req, res){
 
 app.delete(/.*$/, function(req,res){
     var objectPath = (req.path).split('/');
+    var itsDeleteBYId = false;
+    var id;
     if(objectPath[1] === undefined)
     {
         res.status(500).send("What do you want to delete?");
+    } else if (objectPath.length > 3) {
+        res.status(500).send("You have hit get but with no path");
+    } else if (objectPath.length === 3) {
+        itsDeleteBYId = true;
+        id = Number(objectPath[2]);
+        if (id === undefined || id === ''){
+            res.status(500).send("You have hit get but with no ID to get the data");
+        }
+    }
+    
+    if(itsDeleteBYId){
+        deleteData.deleteById(objectPath[1], 'delete', id, function(deleted){
+            if(deleted){
+                res.status(200).send("All data for "+objectPath[1]+" with ID : "+id+" successfully deleted");
+            }
+            else {
+                res.status(404).send("Problem deleting data");
+            }
+        });
+    }else {
+        deleteData.deleteAll(objectPath[1], 'delete', function(deleted){
+            if(deleted){
+                res.status(200).send("All data for "+objectPath[1]+" successfully deleted");
+            }
+            else {
+                res.status(404).send("Problem deleting data");
+            }
+        });
     }
 
-    deleteData.deleteAll(objectPath[1], 'delete', function(deleted){
-        if(deleted){
-            res.status(200).send("Your data with ID has been deleted "+ JSON.stringify(req.body));
-        }
-        else {
-            res.status(404).send("Problem deleting data");
-        }
-    });
+
 })
 
 /**app.all(/.*$/, function(req, res) {
