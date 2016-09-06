@@ -15,12 +15,12 @@ describe('loading express', function () {
     it('200 for everything else', function testPath(done) {
         request(server)
             .get('/customer')
-            .expect(200, {}, done);
+            .expect(200, [ { id: 1, name: 'Tom', email: 'tom@gmail' } ], done);
     });
     it('responds to PUT on /', function testSlash(done) {
         request(server)
             .put('/')
-            .expect(200, {}, done);
+            .expect(500, {}, done);
     });
     it('responds to DELETE on /', function testSlash(done) {
         request(server)
