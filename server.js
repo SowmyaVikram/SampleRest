@@ -10,19 +10,25 @@ var getData = require('./lib/getData');
 var updateData = require('./lib/updateData');
 var deleteData = require('./lib/deleteData');
 
+
 app.get(/.*$/, function(req, res) {
     var objectPath = (req.path).split('/');
     var itsGetBYId = false;
     var id;
-    if (objectPath[1] === undefined) {
-        res.status(500).send("You have hit get but with no path");
+    if (objectPath[1] === undefined || objectPath[1] === "") {
+        var objects;
+        getData.getObjects(function(supportedObjects){
+            objects = supportedObjects;
+            return res.status(200).json(objects);
+        });
+
     } else if (objectPath.length > 3) {
-        res.status(500).send("You have hit get but with no path");
+        return res.status(500).send("You have hit get but with no path");
     } else if (objectPath.length === 3) {
         itsGetBYId = true;
         id = Number(objectPath[2]);
         if (id === undefined || id === ''){
-            res.status(500).send("You have hit get but with no ID to get the data");
+            return res.status(500).send("You have hit get but with no ID to get the data");
         }
     }
 
@@ -30,10 +36,10 @@ app.get(/.*$/, function(req, res) {
         getData.getById(objectPath[1], 'get', id, function (found) {
 
             if (found) {
-                res.json(found);
+                return res.json(found);
             }
             else {
-                res.status(200).send("There is no data to get");
+                return res.status(200).json({});
             }
         });
 
@@ -41,10 +47,10 @@ app.get(/.*$/, function(req, res) {
         getData.getAll(objectPath[1], 'get', function (found) {
 
         if (found) {
-            res.json(found);
+            return res.json(found);
         }
         else {
-            res.status(200).send("There is no data to get");
+            return res.status(200).json({});
         }
     });
    }
@@ -57,15 +63,14 @@ app.listen(port, function () {
 app.post(/.*$/, function(req, res){
 
     var objectPath = (req.path).split('/');
-    console.log(JSON.stringify(objectPath))
 
     if(objectPath[1] === undefined)
     {
-        res.status(500).send("You have hit POST but with no object specified");
+        return res.status(500).send("You have hit POST but with no object specified");
     }
 
-    if(req.body === undefined){
-        res.status(500).send("You have hit POST with no data");
+    if(req.body === undefined || JSON.stringify(req.body) === '{}'){
+        return res.status(500).send("You have hit POST with no BODY");
     }
 
     postData.saveData(objectPath[1], 'post', req.body, function(found){
@@ -73,7 +78,7 @@ app.post(/.*$/, function(req, res){
             res.status(200).send("Your data "+ JSON.stringify(req.body)+" is saved");
         }
         else {
-            res.status(200).send("Please specify a known object");
+            return res.status(200).send("Please specify a known object");
         }
     });
 
@@ -81,22 +86,30 @@ app.post(/.*$/, function(req, res){
 
 app.put(/.*$/, function(req, res){
     var objectPath = (req.path).split('/');
+    var id;
     if(objectPath[1] === undefined )
     {
-        res.status(500).send("Do you think an unknown object can be updated? !");
+        return res.status(500).send("Do you think an unknown object can be updated? !");
     } else if (objectPath.length !== 3 && objectPath[2] === undefined && objectPath[2] === "")
     {
-        res.status(500).send("ID is must. /{objectName}/{id} is the path to be used !");
+        return res.status(500).send("ID is must. /{objectName}/{id} is the path to be used !");
+    } else if (objectPath.length === 3) {
+        id = Number(objectPath[2]);
+        if (id === undefined || id === ''){
+            return res.status(500).send("You have hit PUT but with no ID");
+        }
     }
 
-    var id = objectPath[2];
+    if(req.body === undefined || JSON.stringify(req.body) === '{}'){
+       return res.status(500).send("You have hit PUT with no BODY");
+    }
 
-    updateData.updateByID(objectPath[1], 'put', id, function(found){
+    updateData.updateByID(objectPath[1], 'put', req.body, id, function(found){
         if(found){
-            res.status(200).send("You have hit POST with "+ JSON.stringify(req.body));
+            return res.status(200).send("Following data is updated "+ JSON.stringify(req.body));
         }
         else {
-            res.status(200).send("You have hit POST with but path not found");
+            return res.status(404).send("No, it was not updated as the ID is not found");
         }
     });
 })
@@ -107,33 +120,33 @@ app.delete(/.*$/, function(req,res){
     var id;
     if(objectPath[1] === undefined)
     {
-        res.status(500).send("What do you want to delete?");
+        return res.status(500).send("What do you want to delete?");
     } else if (objectPath.length > 3) {
-        res.status(500).send("You have hit get but with no path");
+        return  res.status(500).send("You have hit get but with no path");
     } else if (objectPath.length === 3) {
         itsDeleteBYId = true;
         id = Number(objectPath[2]);
         if (id === undefined || id === ''){
-            res.status(500).send("You have hit get but with no ID to get the data");
+            return  res.status(500).send("You have hit get but with no ID to get the data");
         }
     }
     
     if(itsDeleteBYId){
         deleteData.deleteById(objectPath[1], 'delete', id, function(deleted){
             if(deleted){
-                res.status(200).send("All data for "+objectPath[1]+" with ID : "+id+" successfully deleted");
+                return res.status(200).send("All data for "+objectPath[1]+" with ID : "+id+" successfully deleted");
             }
             else {
-                res.status(404).send("Problem deleting data");
+                return res.status(404).send("Problem deleting data");
             }
         });
     }else {
         deleteData.deleteAll(objectPath[1], 'delete', function(deleted){
             if(deleted){
-                res.status(200).send("All data for "+objectPath[1]+" successfully deleted");
+                return res.status(200).send("All data for "+objectPath[1]+" successfully deleted");
             }
             else {
-                res.status(404).send("Problem deleting data");
+                return  res.status(404).send("Problem deleting data");
             }
         });
     }

@@ -5,8 +5,7 @@
 - [SampleRest](#samplerest)
   - [Design](#design)
   - [Flow](#flow)
-  - [Setup](#setup)
-  - [Run](#run)
+  - [Setup and Run](#setup-and-run)
   - [Test](#test)
   - [Unit Tests](#unit-tests)
 
@@ -27,28 +26,40 @@ lib/updateData.js - Handles the /PUT calls - updateById
 ```
 ## Flow
 ```
-1. When the server is started and the chosen call comes to the appropriate server/app.<verb> function
-2. The server/app.<verb>, then makes a call to lib/<verb>Data.js
-3. The lib/<verb>Data.js makes a call to lib/DataValidator.js to validate the object and the verb for its support against the model/swaggerData.json
-If the object and the verb is supported then:
-  a. The approriate Cache.<verbRelatedMethod> is called to retrieve/persists the data and the message is sent back to server
-Else
-  b. A false is sent to back to server  
+The Cache is preloaded with following data during app startup:
+customer: [{
+	"id": 1,
+	"name": "Tom",
+	"email": "tom@gmail"
+}], employee: [{
+	"id": 1,
+	"name": "Harry",
+	"email": "harry@gmail"
+}]
+
+1. When the server is started and API call is made to the server, the call is routed to one of the handlers (postData.js pr getData.js)based on the http method called.
+2. Validations are done against the incoming URL, object/method supported and necessary acton is taken. The dataValidator.js parses the swagger json and initializes itself.
+3. Once validations are done, the code interacts with the persistence layer (in memory) to save or retrieve data. The cache.js is used for the same
+4. If none of the conditions are met, necessary error messages are thrown back
 ```
-## Setup 
-Run `npm install`
+## Setup and Run
+```
+Clone the repository and then run the following commands in the same order:
 
-## Run
-Before running the code, please make sure you have run `npm install`
-`node server.js`
-
+1. npm install
+2. node server.js
+```
 ## Test 
 Either use CURL commands or Rest client like POSTMAN
 
-POST http://localhost:3001 accepts and returns a JSON</br>
-GET http://localhost:3001 returns `You have hit GET !`</br>
-PUT http://localhost:3001 returns `This is PUT`</br>
-DELETE http://localhost:3001 returns `This is Delete`
+GET on http://localhost:3001 - Lists the objects supported
+GET on http://localhost:3001/customer - Lists all the data for Customer object
+GET on http://localhost:3001/customer/{id} - Lists all the data for Customer with {id}
+POST on http://localhost:3001/customer  - Adds an entry into in-memory cache for Customer
+PUT on http://localhost:3001/customer/{id} - Updates the Customer with {id}
+DELETE on http://localhost:3001/customer/{id} - Deletes the Customer with {id}
+DELETE on http://localhost:3001/customer - Deletes all the data for Customer object
+
 
 ## Unit Tests
 The test folder contains the UTs for server.js. Run the same using `npm test` command
