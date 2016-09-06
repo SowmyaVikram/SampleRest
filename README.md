@@ -51,7 +51,7 @@ Clone the repository and then run the following commands in the same order:
 ```
 ## Test 
 Either use CURL commands or Rest client like POSTMAN
-
+```
 GET on http://localhost:3001 - Lists the objects supported
 GET on http://localhost:3001/customer - Lists all the data for Customer object
 GET on http://localhost:3001/customer/{id} - Lists all the data for Customer with {id}
@@ -59,7 +59,7 @@ POST on http://localhost:3001/customer  - Adds an entry into in-memory cache for
 PUT on http://localhost:3001/customer/{id} - Updates the Customer with {id}
 DELETE on http://localhost:3001/customer/{id} - Deletes the Customer with {id}
 DELETE on http://localhost:3001/customer - Deletes all the data for Customer object
-
+```
 
 ## Unit Tests
 The test folder contains the UTs for server.js. Run the same using `npm test` command
